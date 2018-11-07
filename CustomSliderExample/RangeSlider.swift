@@ -122,6 +122,7 @@ import QuartzCore
         
         CATransaction.commit();
         
+        sendActions(for: .valueChanged)
         return true;
     }
     

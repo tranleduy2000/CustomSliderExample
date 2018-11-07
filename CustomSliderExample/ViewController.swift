@@ -28,12 +28,18 @@ class ViewController: UIViewController {
         rangeSilder.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: margin).isActive = true;
         rangeSilder.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: margin).isActive = true;
         rangeSilder.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -margin).isActive = true;
+        
+        rangeSilder.addTarget(self, action: #selector(rangeSliderValueChanged(_:)), for: .valueChanged)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         rangeSilder.updateLayerFrames();
+    }
+    
+    @objc func rangeSliderValueChanged(_ sender: RangeSlider){
+        print("rangeSliderValueChanged")
     }
 
 
