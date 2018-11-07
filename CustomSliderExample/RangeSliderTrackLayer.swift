@@ -15,12 +15,17 @@ class RangeSliderTrackLayer: CALayer {
         if let slider = rangeSlider {
             let cornerRadius: CGFloat = bounds.height * slider.curvaceousness / 2;
             let path = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius);
-            context.addPath(path.cgPath)
+           
             
             //fill the track
             context.setFillColor(slider.trackTintColor.cgColor);
             context.addPath(path.cgPath)
             context.fillPath();
+            
+            context.setStrokeColor(UIColor(white: 0, alpha: 0.1).cgColor)
+            context.setLineWidth(1)
+            context.addPath(path.cgPath)
+            context.strokePath();
             
             //fill the highlighted range
             context.setFillColor(slider.trackHighlightedColor.cgColor);

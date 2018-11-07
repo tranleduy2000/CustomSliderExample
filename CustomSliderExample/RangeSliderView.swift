@@ -13,10 +13,27 @@ import QuartzCore
 @IBDesignable class RangeSliderView: UIControl {
     
     // MARK: - Propertise;
-    @IBInspectable var minimumValue: CGFloat = 0.0;
-    @IBInspectable var maximumValue: CGFloat = 1.0;
-    @IBInspectable var lowerValue: CGFloat = 0.2;
-    @IBInspectable var upperValue: CGFloat = 0.8;
+    @IBInspectable var minimumValue: CGFloat = 0.0 {
+        didSet {
+            updateLayerFrames();
+        }
+    }
+    
+    @IBInspectable var maximumValue: CGFloat = 1.0 {
+        didSet {
+            updateLayerFrames();
+        }
+    }
+    @IBInspectable var lowerValue: CGFloat = 0.2 {
+        didSet {
+            updateLayerFrames();
+        }
+    }
+    @IBInspectable var upperValue: CGFloat = 0.8 {
+        didSet {
+            updateLayerFrames();
+        }
+    }
     
     let trackLayer = RangeSliderTrackLayer();
     let lowerThumbLayer = RangeSliderThumbLayer();
@@ -29,11 +46,30 @@ import QuartzCore
     var previousLocation = CGPoint();
     
     
-    var trackTintColor = UIColor(white: 0.9, alpha: 1.0);
-    var trackHighlightedColor = UIColor(red: 0.0, green: 0.45, blue: 0.94, alpha: 1.0);
-    var thumbTintColor = UIColor.white;
+    var trackTintColor = UIColor(white: 0.9, alpha: 1.0) {
+        didSet {
+            trackLayer.setNeedsDisplay();
+        }
+    }
+    var trackHighlightedColor = UIColor(red: 0.0, green: 0.45, blue: 0.94, alpha: 1.0) {
+        didSet{
+            trackLayer.setNeedsDisplay();
+        }
+    }
+    var thumbTintColor = UIColor.white {
+        didSet {
+            lowerThumbLayer.setNeedsDisplay();
+            upperThumbLayer.setNeedsDisplay();
+        }
+    }
     
-    var curvaceousness: CGFloat = 1.0;
+    var curvaceousness: CGFloat = 1.0 {
+        didSet {
+            trackLayer.setNeedsDisplay();
+            lowerThumbLayer.setNeedsDisplay();
+            upperThumbLayer.setNeedsDisplay();
+        }
+    }
     
     override var frame: CGRect {
         didSet {
@@ -66,6 +102,9 @@ import QuartzCore
     }
     
     func updateLayerFrames(){
+        CATransaction.begin();
+        CATransaction.setDisableActions(true);
+        
         trackLayer.frame = bounds.insetBy(dx: 0, dy: bounds.height / 3);
         trackLayer.setNeedsDisplay();
         
@@ -77,6 +116,7 @@ import QuartzCore
         upperThumbLayer.frame = CGRect(x: upperThumbCenter - thumbWidth / 2, y: 0.0, width: thumbWidth, height: thumbWidth);
         upperThumbLayer.setNeedsDisplay();
         
+        CATransaction.commit();
     }
     
     func positionForValue(_ value: CGFloat) -> CGFloat {
@@ -119,14 +159,6 @@ import QuartzCore
             upperValue += deltaValue;
             upperValue = boundValue(value: upperValue, toLowerValue: minimumValue, upperValue: maximumValue);
         }
-        
-        //update UI
-        CATransaction.begin();
-        CATransaction.setDisableActions(true);
-        
-        updateLayerFrames();
-        
-        CATransaction.commit();
         
         sendActions(for: .valueChanged)
         return true;

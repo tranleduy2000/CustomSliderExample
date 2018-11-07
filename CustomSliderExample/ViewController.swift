@@ -30,6 +30,12 @@ class ViewController: UIViewController {
         rangeSilder.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -margin).isActive = true;
         
         rangeSilder.addTarget(self, action: #selector(rangeSliderValueChanged(_:)), for: .valueChanged)
+        
+        let deadlineTime = DispatchTime.now() + .seconds(2);
+        DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
+            self.rangeSilder.trackHighlightedColor = UIColor.red;
+            self.rangeSilder.curvaceousness = 0;
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
