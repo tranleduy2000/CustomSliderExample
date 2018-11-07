@@ -26,11 +26,15 @@ import QuartzCore
         return bounds.height;
     }
     
+    var previousLocation = CGPoint();
+    
+    
     override var frame: CGRect {
         didSet {
             updateLayerFrames();
         }
     }
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame);
@@ -77,5 +81,54 @@ import QuartzCore
         // ^ thumb at start position, need add thumbWidth / 2 to move to center
         return position + thumbWidth / 2;
     }
+    
+    override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        previousLocation = touch.location(in: self);
+        
+        if lowerThumbLayer.frame.contains(previousLocation) {
+            lowerThumbLayer.highlighted = true;
+        } else if upperThumbLayer.frame.contains(previousLocation) {
+            upperThumbLayer.highlighted = true;
+        }
+        
+        return lowerThumbLayer.highlighted || upperThumbLayer.highlighted;
+    }
+    
+    func boundValue(value: CGFloat, toLowerValue lowerValue: CGFloat, upperValue: CGFloat) -> CGFloat {
+        return min(max(value, lowerValue), upperValue);
+    }
+    
+    override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        let location = touch.location(in: self);
+        
+        let deltaLocation: CGFloat = location.x - previousLocation.x;
+        let deltaValue: CGFloat = deltaLocation / (bounds.width - thumbWidth) * (maximumValue - minimumValue);
+        
+        previousLocation = location;
+        
+        if lowerThumbLayer.highlighted {
+            lowerValue += deltaValue;
+            lowerValue = boundValue(value: lowerValue, toLowerValue: minimumValue, upperValue: maximumValue);
+        } else if upperThumbLayer.highlighted {
+            upperValue += deltaValue;
+            upperValue = boundValue(value: upperValue, toLowerValue: minimumValue, upperValue: maximumValue);
+        }
+        
+        //update UI
+        CATransaction.begin();
+        CATransaction.setDisableActions(true);
+        
+        updateLayerFrames();
+        
+        CATransaction.commit();
+        
+        return true;
+    }
+    
+    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+        lowerThumbLayer.highlighted = false;
+        upperThumbLayer.highlighted = false;
+    }
+    
     
 }
