@@ -19,8 +19,8 @@ import QuartzCore
     @IBInspectable var upperValue: CGFloat = 0.8;
     
     let trackLayer = CALayer();
-    let lowerThumbLayer = CALayer();
-    let upperThumbLayer = CALayer();
+    let lowerThumbLayer = RangeSliderThumbLayer();
+    let upperThumbLayer = RangeSliderThumbLayer();
     
     var thumbWidth: CGFloat {
         return bounds.height;
@@ -58,11 +58,13 @@ import QuartzCore
         
         let lowerThumbCenter = positionForValue(lowerValue);
         
-        lowerThumbLayer.frame = CGRect(x: lowerThumbCenter - thumbWidth / 2, y: 0.0, width: thumbWidth, height: thumbWidth)
+        lowerThumbLayer.frame = CGRect(x: lowerThumbCenter - thumbWidth / 2, y: 0.0, width: thumbWidth, height: thumbWidth);
+        lowerThumbLayer.rangeSlider = self;
         lowerThumbLayer.setNeedsDisplay();
         
         let upperThumbCenter = positionForValue(upperValue);
         upperThumbLayer.frame = CGRect(x: upperThumbCenter - thumbWidth / 2, y: 0.0, width: thumbWidth, height: thumbWidth);
+        upperThumbLayer.rangeSlider = self;
         upperThumbLayer.setNeedsDisplay();
         
     }
