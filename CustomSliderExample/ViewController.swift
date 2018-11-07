@@ -10,13 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var rangeSilder: RangeSlider!;
+    var rangeSilder: RangeSliderView!;
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        rangeSilder = RangeSlider(frame: CGRect.zero)
-        rangeSilder.backgroundColor = UIColor.red;
+        rangeSilder = RangeSliderView(frame: CGRect.zero)
+//        rangeSilder.backgroundColor = UIColor.red;
         
         view.addSubview(rangeSilder)
         
@@ -38,7 +38,7 @@ class ViewController: UIViewController {
         rangeSilder.updateLayerFrames();
     }
     
-    @objc func rangeSliderValueChanged(_ sender: RangeSlider){
+    @objc func rangeSliderValueChanged(_ sender: RangeSliderView){
         print("rangeSliderValueChanged")
     }
 
